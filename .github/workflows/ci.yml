@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with: { python-version: "3.12" }
       - run: pip install ruff && ruff check src tests scripts
   test:
@@ -25,7 +25,7 @@ jobs:
           - { os: ubuntu-latest, python: "3.13", of3: "latest" }   # canary: expected to skip-patch, not fail
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with: { python-version: "${{ matrix.python }}" }
       - name: Install
         run: |
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with: { python-version: "3.12" }
       - run: pip install build twine && python -m build && twine check dist/*
       - uses: actions/upload-artifact@v4
