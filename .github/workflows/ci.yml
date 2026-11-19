@@ -7,7 +7,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
       - run: pip install ruff && ruff check src tests scripts
@@ -24,7 +24,7 @@ jobs:
           - { os: ubuntu-24.04-arm, python: "3.12", of3: "0.5.1" }
           - { os: ubuntu-latest, python: "3.13", of3: "latest" }   # canary: expected to skip-patch, not fail
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with: { python-version: "${{ matrix.python }}" }
       - name: Install
@@ -38,7 +38,7 @@ jobs:
   package:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
       - run: pip install build twine && python -m build && twine check dist/*
