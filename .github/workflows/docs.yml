@@ -35,7 +35,7 @@ jobs:
       - run: pip install -e ".[docs]"
       - name: Build docs (warnings are errors)
         run: sphinx-build -W --keep-going -b html docs docs/_build/html
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with: {name: docs-html, path: docs/_build/html}
 
   bench:
@@ -63,7 +63,7 @@ jobs:
           mkdir -p bench-out && cp bench-run/results.json "bench-out/results-$NAME.json"
       - name: Upload results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: bench-${{ matrix.os }}-py${{ matrix.python }}
           path: bench-out/results-*.json
@@ -84,7 +84,7 @@ jobs:
           ls results
           python src/openfold3_accel/bench/report.py results/results-*.json --out report/index.html
           mkdir -p report/data && cp results/results-*.json report/data/
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with: {name: bench-report, path: report}
       - name: Fail if an exact run errored or was not predictively equivalent
         env: {EQUIV_TOL_ANGSTROM: "1e-4"}
