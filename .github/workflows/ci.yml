@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python: ["3.12", "3.13"]
+        python: ["3.12", "3.13", "3.14", "3.15"]
         of3: ["0.5.0", "0.5.1"]      # add versions only after running scripts/fingerprint_versions.py
         include:
           - { os: ubuntu-24.04-arm, python: "3.12", of3: "0.5.1" }
@@ -31,7 +31,7 @@ jobs:
         run: |
           pip install torch --index-url https://download.pytorch.org/whl/cpu || pip install torch
           if [ "${{ matrix.of3 }}" = latest ]; then pip install openfold3; else pip install "openfold3==${{ matrix.of3 }}"; fi
-          pip install -e ".[test]" --no-deps pytest
+          pip install -e ".[test]" pytest
       - name: Tests
         run: pytest -q
         continue-on-error: ${{ matrix.of3 == 'latest' }}
