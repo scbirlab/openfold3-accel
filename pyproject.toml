@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openfold3-accel"
+version = "0.1.0"
+description = "Drop-in, reversible inference acceleration for OpenFold3 (CPU-focused): `import openfold3_accel`."
+readme = "README.md"
+requires-python = ">=3.12,<3.15"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Eachan Johnson" }]
+keywords = ["openfold3", "alphafold3", "pytorch", "structure prediction", "performance", "cpu"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = ["torch>=2.5"]
+
+[project.optional-dependencies]
+openfold3 = ["openfold3>=0.5.0,<0.6"]
+test = ["pytest>=8", "pytest-cov", "openfold3>=0.5.0,<0.6"]
+docs = [
+  "sphinx>=7.3",
+  "pydata-sphinx-theme>=0.15",
+  "myst-parser>=3",
+  "sphinx-copybutton",
+  "sphinx-design",
+]
+dev = ["openfold3-accel[test,docs]", "ruff", "pre-commit", "build"]
+
+[project.scripts]
+openfold3-accel-bench = "openfold3_accel.bench.__main__:main"
+openfold3-accel-report = "openfold3_accel.bench.report:main"
+
+[project.urls]
+Homepage = "https://github.com/scbirlab/openfold3-accel"
+Documentation = "https://scbirlab.github.io/openfold3-accel/"
+Issues = "https://github.com/scbirlab/openfold3-accel/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+openfold3_accel = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = ["slow: slower end-to-end tests"]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "W"]
+ignore = ["E501", "B905"]
+
+[tool.coverage.run]
+source = ["openfold3_accel"]

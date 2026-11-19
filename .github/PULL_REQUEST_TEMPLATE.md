@@ -1,0 +1,3 @@
+- [ ] Tests added/updated (`pytest`), exact groups still match upstream
+- [ ] Fingerprints regenerated (`scripts/fingerprint_versions.py`) only after reading the upstream diff
+- [ ] Docs / CHANGELOG updated

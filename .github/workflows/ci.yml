@@ -1,0 +1,46 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+  workflow_dispatch:
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install ruff && ruff check src tests scripts
+  test:
+    name: py${{ matrix.python }} / openfold3 ${{ matrix.of3 }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python: ["3.12", "3.13"]
+        of3: ["0.5.0", "0.5.1"]      # add versions only after running scripts/fingerprint_versions.py
+        include:
+          - { os: ubuntu-24.04-arm, python: "3.12", of3: "0.5.1" }
+          - { os: ubuntu-latest, python: "3.13", of3: "latest" }   # canary: expected to skip-patch, not fail
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "${{ matrix.python }}" }
+      - name: Install
+        run: |
+          pip install torch --index-url https://download.pytorch.org/whl/cpu || pip install torch
+          if [ "${{ matrix.of3 }}" = latest ]; then pip install openfold3; else pip install "openfold3==${{ matrix.of3 }}"; fi
+          pip install -e ".[test]" --no-deps pytest
+      - name: Tests
+        run: pytest -q
+        continue-on-error: ${{ matrix.of3 == 'latest' }}
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install build twine && python -m build && twine check dist/*
+      - uses: actions/upload-artifact@v4
+        with: { name: dist, path: dist }
