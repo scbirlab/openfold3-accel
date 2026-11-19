@@ -141,7 +141,7 @@ jobs:
         with: {name: bench-report, path: site/benchmarks/report}
       - if: steps.pages.outputs.enabled == 'true'
         run: touch site/.nojekyll
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
         if: steps.pages.outputs.enabled == 'true'
       # Unique artifact name per attempt: "Re-run failed jobs" keeps the previous attempt's artifacts in the
       # same run, and deploy-pages refuses to continue when it finds two artifacts called "github-pages".
